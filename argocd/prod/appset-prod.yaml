@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: appset-prod
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+  - git:
+      repoURL: git@github.com:pcminh-landing-demo/gitops-artifacts.git
+      revision: HEAD
+      directories:
+      - path: apps/prod/*
+  template:
+    metadata:
+      name: '{{.path.basename}}'
+    spec:
+      project: "default"
+      source:
+        repoURL: git@github.com:pcminh-landing-demo/gitops-artifacts.git
+        targetRevision: HEAD
+        path: 'charts/{{.path.basename}}'
+        helm:
+          valueFiles:
+            - '{{.path.path}}/values.yaml'
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{.path.basename}}'
+      syncPolicy:
+        syncOptions:
+        - CreateNamespace=true
