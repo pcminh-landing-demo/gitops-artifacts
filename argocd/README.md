@@ -1,5 +1,5 @@
 # applicationsets
 
-Put your ArgoCD specific implementations here - including Applications and ApplicationSets
+Put your ArgoCD specific implementations in each of the subdirectory - including Applications and ApplicationSets
 
-Each ApplicationSet is respective to an environment
+Typically, its either argocd.Application or argocd.ApplicationSet
